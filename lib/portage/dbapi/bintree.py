@@ -458,11 +458,10 @@ class binarytree:
 		origcp = mylist[1]
 		newcp = mylist[2]
 		# sanity check
-		for atom in (origcp, newcp):
-			if not isjustname(atom):
-				raise InvalidPackageName(str(atom))
+		if not isjustname(newcp):
+			raise InvalidPackageName(str(atom))
 		mynewcat = catsplit(newcp)[0]
-		origmatches=self.dbapi.cp_list(origcp)
+		origmatches=self.dbapi.match(origcp)
 		moves = 0
 		if not origmatches:
 			return moves

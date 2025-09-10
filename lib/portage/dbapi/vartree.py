@@ -359,52 +359,53 @@ class vardbapi(dbapi):
 				return True
 		return False
 
-	def move_ent(self, mylist, repo_match=None):
-		origcp = mylist[1]
-		newcp = mylist[2]
 
-		# sanity check
-		for atom in (origcp, newcp):
-			if not isjustname(atom):
-				raise InvalidPackageName(str(atom))
-		origmatches = self.match(origcp, use_cache=0)
+	def move_ent(self, to_from_list, repo_match=None):
+		orig_match = to_from_list[1]
+		new_cp = to_from_list[2]
+
+		# sanity check - destination must be a catpkg
+		if not isjustname(new_cp):
+			raise InvalidPackageName(str(new_cp))
+		matches = self.match(orig_match, use_cache=0)
 		moves = 0
-		if not origmatches:
+		if not matches:
 			return moves
-		for mycpv in origmatches:
-			mycpv_cp = mycpv.cp
-			if mycpv_cp != origcp:
+		for found_cpv in matches:
+			mycpv_cp = found_cpv.cp
+			if mycpv_cp != orig_match:
 				# Ignore PROVIDE virtual match.
 				continue
 			if repo_match is not None \
-				and not repo_match(mycpv.repo):
+				and not repo_match(found_cpv.repo):
 				continue
 
 			# Use isvalidatom() to check if this move is valid for the
 			# EAPI (characters allowed in package names may vary).
-			if not isvalidatom(newcp, eapi=mycpv.eapi):
+			if not isvalidatom(new_cp, eapi=found_cpv.eapi):
 				continue
 
-			mynewcpv = mycpv.replace(mycpv_cp, str(newcp), 1)
-			mynewcat = catsplit(newcp)[0]
-			origpath = self.getpath(mycpv)
+			# Perform string replacement, replace old catpkg with new:
+			renamed_cpv = found_cpv.replace(mycpv_cp, str(new_cp), 1)
+			renamed_cat = catsplit(new_cp)[0]
+			origpath = self.getpath(found_cpv)
 			if not os.path.exists(origpath):
 				continue
 			moves += 1
-			if not os.path.exists(self.getpath(mynewcat)):
+			if not os.path.exists(self.getpath(renamed_cat)):
 				#create the directory
-				ensure_dirs(self.getpath(mynewcat))
-			newpath = self.getpath(mynewcpv)
+				ensure_dirs(self.getpath(renamed_cat))
+			newpath = self.getpath(renamed_cpv)
 			if os.path.exists(newpath):
 				#dest already exists; keep this puppy where it is.
 				continue
 			_movefile(origpath, newpath, mysettings=self.settings)
-			self._clear_pkg_cache(self._dblink(mycpv))
-			self._clear_pkg_cache(self._dblink(mynewcpv))
+			self._clear_pkg_cache(self._dblink(found_cpv))
+			self._clear_pkg_cache(self._dblink(renamed_cpv))
 
 			# We need to rename the ebuild now.
-			old_pf = catsplit(mycpv)[1]
-			new_pf = catsplit(mynewcpv)[1]
+			old_pf = catsplit(found_cpv)[1]
+			new_pf = catsplit(renamed_cpv)[1]
 			if new_pf != old_pf:
 				try:
 					os.rename(os.path.join(newpath, old_pf + ".ebuild"),
@@ -414,7 +415,7 @@ class vardbapi(dbapi):
 						raise
 					del e
 			write_atomic(os.path.join(newpath, "PF"), new_pf+"\n")
-			write_atomic(os.path.join(newpath, "CATEGORY"), mynewcat+"\n")
+			write_atomic(os.path.join(newpath, "CATEGORY"), renamed_cat+"\n")
 
 		return moves
 

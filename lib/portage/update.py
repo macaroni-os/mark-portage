@@ -24,6 +24,7 @@ from portage.const import USER_CONFIG_PATH, VCS_DIRS
 from portage.eapi import _get_eapi_attrs
 from portage.exception import DirectoryNotFound, InvalidAtom, PortageException
 from portage.localization import _
+from portage.versions import cpv_getkey
 
 
 ignored_dbentries = ("CONTENTS", "environment.bz2")
@@ -36,6 +37,12 @@ def update_dbentry(update_cmd, mycontent, eapi=None, parent=None):
 	if update_cmd[0] == "move":
 		old_value = str(update_cmd[1])
 		new_value = str(update_cmd[2])
+
+		if cpv_getkey(old_value) != old_value:
+			# original matched (source) package is a version range. And when handling version ranges, we don't
+			# assume that we want to perform any *DEPEND updates at all, since we aren't simply renaming a single
+			# package but splitting a single package into two packages.
+			return mycontent
 
 		# Use isvalidatom() to check if this move is valid for the
 		# EAPI (characters allowed in package names may vary).
@@ -217,26 +224,32 @@ def parse_updates(mycontent):
 				errors.append(_("ERROR: Update command invalid '%s'") % myline)
 				continue
 			valid = True
+			reason = ""
 			for i in (1, 2):
 				try:
 					atom = Atom(mysplit[i])
 				except InvalidAtom:
 					atom = None
+					reason = " : '%s' is invalid." % mysplit[i]
 				else:
-					if atom.blocker or atom != atom.cp:
+					if atom.blocker:
+						atom = None
+						reason = " : Operand can't be blocker"
+					elif i == 2 and atom != atom.cp:
+						reason = " : Second operand (dest) must be catpkg (no version.)"
 						atom = None
 				if atom is not None:
 					mysplit[i] = atom
 				else:
 					errors.append(
-						_("ERROR: Malformed update entry '%s'") % myline)
+						_("ERROR: Malformed update entry '%s'" + reason) % myline)
 					valid = False
 					break
 			if not valid:
 				continue
 
 		if mysplit[0] == "slotmove":
-			if len(mysplit)!=4:
+			if len(mysplit) != 4:
 				errors.append(_("ERROR: Update command invalid '%s'") % myline)
 				continue
 			pkg, origslot, newslot = mysplit[1], mysplit[2], mysplit[3]

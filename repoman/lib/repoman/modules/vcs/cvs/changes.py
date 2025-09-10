@@ -91,7 +91,7 @@ class Changes(ChangesBase):
 				continue
 
 			_out = repoman_getstatusoutput(
-				"egrep -q %s %s" % (headerstring, portage._shell_quote(_file)))
+				"grep -E -q %s %s" % (headerstring, portage._shell_quote(_file)))
 			if _out[0] == 0:
 				headers.append(_file)
 

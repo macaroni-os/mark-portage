@@ -85,7 +85,7 @@ class Status:
 			(calls sys.exit on fatal problems)
 		"""
 
-		cmd = "svn status -u 2>&1 | egrep -v '^.  +.*/digest-[^/]+' | head -n-1"
+		cmd = "svn status -u 2>&1 | grep -E -v '^.  +.*/digest-[^/]+' | head -n-1"
 		msg = ("Performing a %s with a little magic grep to check for updates."
 				% green("svn status -u"))
 

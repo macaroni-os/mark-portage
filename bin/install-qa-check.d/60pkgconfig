@@ -2,7 +2,7 @@
 
 pkgconfig_check() {
 	# Look for leaking LDFLAGS into pkg-config files
-	local f=$(egrep -sH '^Libs.*-Wl,(-O[012]|--hash-style)' "${ED}"/usr/*/pkgconfig/*.pc)
+	local f=$(grep -E -sH '^Libs.*-Wl,(-O[012]|--hash-style)' "${ED}"/usr/*/pkgconfig/*.pc)
 	if [[ -n ${f} ]] ; then
 		eqawarn "QA Notice: pkg-config files with wrong LDFLAGS detected:"
 		eqawarn "${f//${D}}"

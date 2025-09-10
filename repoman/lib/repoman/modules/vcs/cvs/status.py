@@ -64,8 +64,8 @@ class Status:
 		"""
 
 		cmd = (r"cvs -n up 2>/dev/null | "
-				r"egrep '^[^\?] .*' | "
-				r"egrep -v '^. .*/digest-[^/]+|^cvs server: .* -- ignored$'")
+				r"grep -E '^[^\?] .*' | "
+				r"grep -E -v '^. .*/digest-[^/]+|^cvs server: .* -- ignored$'")
 		msg = ("Performing a %s with a little magic grep to check for updates."
 				% green("cvs -n up"))
 

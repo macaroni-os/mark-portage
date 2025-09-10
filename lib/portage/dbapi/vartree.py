@@ -4328,12 +4328,10 @@ class dblink:
 				" should simply ignore the collision since there is not"
 				" enough information to determine if a real problem"
 				" exists. Please do NOT file a bug report at"
-				" https://bugs.gentoo.org/ unless you report exactly which"
-				" two packages install the same file(s). See"
-				" https://wiki.gentoo.org/wiki/Knowledge_Base:Blockers"
-				" for tips on how to solve the problem. And once again,"
-				" please do NOT file a bug report unless you have"
-				" completely understood the above message.")
+				" https://github.com/macaroni-os/mark-issues unless you "
+				" report exactly which two packages install the same file(s)."
+				" And once again, please do NOT file a bug report unless you "
+				" have completely understood the above message.")
 
 			self.settings["EBUILD_PHASE"] = "preinst"
 			from textwrap import wrap

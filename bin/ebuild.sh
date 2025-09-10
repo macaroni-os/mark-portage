@@ -677,10 +677,10 @@ if [[ $EBUILD_PHASE = depend ]] ; then
 		# Make it group writable. 666&~002==664
 		umask 002
 	fi
-
+	_PY_COMPAT="${PYTHON_COMPAT[@]}"
 	auxdbkeys="DEPEND RDEPEND SLOT SRC_URI RESTRICT HOMEPAGE LICENSE
 		DESCRIPTION KEYWORDS INHERITED IUSE REQUIRED_USE PDEPEND BDEPEND
-		EAPI PROPERTIES DEFINED_PHASES UNUSED_05 UNUSED_04
+		EAPI PROPERTIES DEFINED_PHASES UNUSED_05 _PY_COMPAT
 		UNUSED_03 UNUSED_02 UNUSED_01"
 
 	if ! ___eapi_has_BDEPEND; then
@@ -699,6 +699,7 @@ if [[ $EBUILD_PHASE = depend ]] ; then
 		done
 		eval "exec ${PORTAGE_PIPE_FD}>&-"
 	fi
+	unset _PY_COMPAT
 	set +f
 else
 	# Note: readonly variables interfere with __preprocess_ebuild_env(), so

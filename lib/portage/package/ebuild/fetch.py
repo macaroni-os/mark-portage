@@ -627,14 +627,17 @@ def fetch(myuris, mysettings, listonly=0, fetchonly=0,
 	restrict = mysettings.get("PORTAGE_RESTRICT","").split()
 	userfetch = portage.data.secpass >= 2 and "userfetch" in features
 
-	# 'nomirror' is bad/negative logic. You Restrict mirroring, not no-mirroring.
-	restrict_mirror = "mirror" in restrict or "nomirror" in restrict
-	if restrict_mirror:
-		if ("mirror" in features) and ("lmirror" not in features):
-			# lmirror should allow you to bypass mirror restrictions.
-			# XXX: This is not a good thing, and is temporary at best.
-			print(_(">>> \"mirror\" mode desired and \"mirror\" restriction found; skipping fetch."))
-			return 1
+	# Disable evaluation of mirror restriction when utilizing Funtoo CDN:
+	restrict_mirror = False
+	if "cdn" not in features:
+		# 'nomirror' is bad/negative logic. You Restrict mirroring, not no-mirroring.
+		restrict_mirror = "mirror" in restrict or "nomirror" in restrict
+		if restrict_mirror:
+			if ("mirror" in features) and ("lmirror" not in features):
+				# lmirror should allow you to bypass mirror restrictions.
+				# XXX: This is not a good thing, and is temporary at best.
+				print(_(">>> \"mirror\" mode desired and \"mirror\" restriction found; skipping fetch."))
+				return 1
 
 	# Generally, downloading the same file repeatedly from
 	# every single available mirror is a waste of bandwidth

@@ -145,7 +145,7 @@ def digestgen(myarchives=None, mysettings=None, myportdb=None):
 			except OSError:
 				st = None
 
-			if not fetch({myfile : uris}, mysettings):
+			if not fetch({myfile : uris}, mysettings, try_mirrors=0):
 				myebuild = os.path.join(mysettings["O"],
 					catsplit(cpv)[1] + ".ebuild")
 				spawn_nofetch(myportdb, myebuild)

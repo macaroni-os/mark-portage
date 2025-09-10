@@ -671,7 +671,7 @@ setup(
 		['$portage_confdir', [
 			'cnf/make.conf.example', 'cnf/make.globals']],
 		['$portage_setsdir', ['cnf/sets/portage.conf']],
-		['$docdir', ['NEWS', 'RELEASE-NOTES']],
+		['$docdir', ['NEWS' ]],
 		['$portage_base/bin', ['bin/deprecated-path']],
 		['$sysconfdir/portage/repo.postsync.d', ['cnf/repo.postsync.d/example']],
 	],

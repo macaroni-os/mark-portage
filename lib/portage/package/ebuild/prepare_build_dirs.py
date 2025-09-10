@@ -417,6 +417,18 @@ def _prepare_fake_filesdir(settings):
 			os.unlink(symlink_path)
 			os.symlink(real_filesdir, symlink_path)
 
+def _prepare_fake_repodir(settings):
+	real_repodir = os.path.normpath(os.path.join(os.path.dirname(settings["EBUILD"]), "../.."))
+	symlink_path = os.path.dirname(settings["FILESDIR"]) + "/repo"
+	try:
+		link_target = os.readlink(symlink_path)
+	except OSError:
+		os.symlink(real_repodir, symlink_path)
+	else:
+		if link_target != real_repodir:
+			os.unlink(symlink_path)
+			os.symlink(real_repodir, symlink_path)
+
 def _prepare_fake_distdir(settings, alist):
 	orig_distdir = settings["DISTDIR"]
 	edpath = os.path.join(settings["PORTAGE_BUILDDIR"], "distdir")

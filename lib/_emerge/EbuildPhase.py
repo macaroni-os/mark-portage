@@ -20,7 +20,7 @@ from portage.util._dyn_libs.soname_deps_qa import (
 	_get_unresolved_soname_deps,
 )
 from portage.package.ebuild.prepare_build_dirs import (_prepare_workdir,
-		_prepare_fake_distdir, _prepare_fake_filesdir)
+		_prepare_fake_distdir, _prepare_fake_filesdir, _prepare_fake_repodir)
 from portage.util.futures.compat_coroutine import coroutine
 from portage.util import writemsg
 from portage.util._async.AsyncTaskFuture import AsyncTaskFuture
@@ -205,6 +205,7 @@ class EbuildPhase(CompositeTask):
 			alist = self.settings.configdict["pkg"].get("A", "").split()
 			_prepare_fake_distdir(self.settings, alist)
 			_prepare_fake_filesdir(self.settings)
+			_prepare_fake_repodir(self.settings)
 
 		fd_pipes = self.fd_pipes
 		if fd_pipes is None:

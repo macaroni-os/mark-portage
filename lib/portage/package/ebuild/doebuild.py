@@ -402,6 +402,7 @@ def doebuild_environment(myebuild, mydo, myroot=None, settings=None,
 	mysettings["T"] = os.path.join(mysettings["PORTAGE_BUILDDIR"], "temp")
 	mysettings["SANDBOX_LOG"] = os.path.join(mysettings["T"], "sandbox.log")
 	mysettings["FILESDIR"] = os.path.join(settings["PORTAGE_BUILDDIR"], "files")
+	mysettings["REPODIR"] = os.path.join(settings["PORTAGE_BUILDDIR"], "repo")
 
 	# Prefix forward compatability
 	eprefix_lstrip = mysettings["EPREFIX"].lstrip(os.sep)

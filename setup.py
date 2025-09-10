@@ -655,10 +655,10 @@ class build_ext(_build_ext):
 
 setup(
 	name = 'portage',
-	version = '3.0.14',
-	url = 'https://wiki.gentoo.org/wiki/Project:Portage',
-	author = 'Gentoo Portage Development Team',
-	author_email = 'dev-portage@gentoo.org',
+	version = '4.0.0',
+	url = 'https://github.com/macaroni-os/mark-portage/',
+	author = 'MacaroniOS Portage Development Team',
+	author_email = 'devs@macaronios.org',
 
 	package_dir = {'': 'lib'},
 	packages = list(find_packages()),

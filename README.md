@@ -14,3 +14,6 @@ aligned to the MARK targets and later replace this engine with another tool in t
 
 We always thanks all the authors of the Gentoo Portage that in the history have permitted to reach
 today the creation of the MARK tree.
+
+To better distinguish this fork from original Portage we will use major release 4 and the package
+`sys-apps/portage` will be soon renamed on `sys-apps/mark-portage`.

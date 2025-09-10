@@ -785,9 +785,10 @@ class RepoConfigLoader:
 						continue
 
 					if repo.name != repo_name:
-						writemsg_level("!!! %s\n" % _("Section '%s' in repos.conf has name different "
-							"from repository name '%s' set inside repository") %
-							(repo_name, repo.name), level=logging.ERROR, noiselevel=-1)
+						if repo_name not in repo.aliases:
+							writemsg_level("!!! %s\n" % _("Section '%s' in repos.conf has name different "
+								"from repository name '%s' set inside repository") %
+								(repo_name, repo.name), level=logging.ERROR, noiselevel=-1)
 						del prepos[repo_name]
 						continue
 

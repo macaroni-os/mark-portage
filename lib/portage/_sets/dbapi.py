@@ -83,6 +83,8 @@ class OwnerSet(PackageSet):
 		if exclude_paths is None:
 			for link, p in vardb._owners.iter_owners(paths):
 				pkg = pkg_str(link.mycpv, None)
+				if "sys-kernel/debian" in pkg.cp:
+					continue
 				rValue.add("%s:%s" % (pkg.cp, pkg.slot))
 		else:
 			all_paths = set()
@@ -92,6 +94,8 @@ class OwnerSet(PackageSet):
 			for link, p in vardb._owners.iter_owners(all_paths):
 				pkg = pkg_str(link.mycpv, None)
 				atom = "%s:%s" % (pkg.cp, pkg.slot)
+				if "sys-kernel/debian" in pkg.cp:
+					continue
 				rValue.add(atom)
 				# Returned paths are relative to ROOT and do not have
 				# a leading slash.

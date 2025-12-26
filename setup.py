@@ -655,7 +655,7 @@ class build_ext(_build_ext):
 
 setup(
 	name = 'portage',
-	version = '4.0.1',
+	version = '4.0.2',
 	url = 'https://github.com/macaroni-os/mark-portage/',
 	author = 'MacaroniOS Portage Development Team',
 	author_email = 'devs@macaronios.org',
